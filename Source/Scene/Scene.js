@@ -1475,21 +1475,26 @@ define([
         var useLogDepth = frameState.useLogDepth;
         var derivedCommands = command.derivedCommands;
 
-        if (frameState.useLogDepthDirty && !command.dirty) {
-            var needsLogDepthDerivedCommands = useLogDepth && !defined(derivedCommands.logDepth);
-            var needsDerivedCommands = !useLogDepth && !defined(derivedCommands.depth);
-            command.dirty = needsLogDepthDerivedCommands || needsDerivedCommands;
-        }
+        var logDepthObject = command.derivedCommands.logDepth;
+        var logDepthCommand = defined(logDepthObject) ? logDepthObject.command : undefined;
+
+        var needsLogDepthDerivedCommands = useLogDepth && (!defined(logDepthCommand) || logDepthCommand.derivedCommandsDirty);
+        var needsDerivedCommands = !useLogDepth && command.derivedCommandsDirty;
+        command.dirty = command.dirty || needsLogDepthDerivedCommands || needsDerivedCommands;
 
         if (command.dirty) {
             command.dirty = false;
 
-            var logDepthCommand;
             var logDepthDerivedCommands;
             if (useLogDepth) {
                 derivedCommands.logDepth = DerivedCommand.createLogDepthCommand(command, context, derivedCommands.logDepth);
                 logDepthCommand = derivedCommands.logDepth.command;
                 logDepthDerivedCommands = logDepthCommand.derivedCommands;
+            }
+
+            command.derivedCommandsDirty = useLogDepth;
+            if (defined(logDepthCommand)) {
+                logDepthCommand.derivedCommandsDirty = !useLogDepth;
             }
 
             if (shadowsEnabled && (command.receiveShadows || command.castShadows)) {
@@ -1518,11 +1523,9 @@ define([
                 }
             }
 
-            if (frameState.passes.pick && !defined(command.pickId)) {
-                return;
+            if (!command.pickOnly) {
+                derivedCommands.depth = DerivedCommand.createDepthOnlyDerivedCommand(this, command, context, derivedCommands.depth);
             }
-
-            derivedCommands.depth = DerivedCommand.createDepthOnlyDerivedCommand(this, command, context, derivedCommands.depth);
         }
     };
 

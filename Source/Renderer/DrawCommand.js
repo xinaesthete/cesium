@@ -39,8 +39,10 @@ define([
         this._castShadows = defaultValue(options.castShadows, false);
         this._receiveShadows = defaultValue(options.receiveShadows, false);
         this._pickId = options.pickId;
+        this._pickOnly = defaultValue(options.pickOnly, false);
 
         this.dirty = true;
+        this.derivedCommandsDirty = true;
         this.lastDirtyTime = 0;
 
         /**
@@ -471,6 +473,19 @@ define([
                     this.dirty = true;
                 }
             }
+        },
+        /**
+         * Whether this command should be executed in the pick pass only.
+         *
+         * @memberof DrawCommand.prototype
+         * @type {Boolean}
+         * @default false
+         * @readonly
+         */
+        pickOnly : {
+            get : function() {
+                return this._pickOnly;
+            }
         }
     });
 
@@ -506,6 +521,7 @@ define([
         result._castShadows = command._castShadows;
         result._receiveShadows = command._receiveShadows;
         result._pickId = command._pickId;
+        result._pickOnly = command._pickOnly;
 
         result.dirty = true;
         result.lastDirtyTime = 0;
