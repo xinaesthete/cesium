@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" creator="OruxMaps" version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+<metadata>
+<name><![CDATA[2013-04-22 11:13]]></name>
+<desc><![CDATA[]]></desc>
+<link href="http://www.oruxmaps.com">
+<text>OruxMaps</text>
+</link>
+<time>2013-04-22T10:13:45Z</time><bounds maxlat="0.0" maxlon="-1.30849438" minlat="51.0635152" minlon="0.0"/>
+</metadata>
+<trk>
+<name><![CDATA[2013-04-22 11:13]]></name>
+<desc><![CDATA[<h1>OruxMaps</h1><br /><hr align="center" width="480" style="height: 2px; width: 517px"/><h2>Name: 2013-04-22 11:13</h2><br /><p>Start time: 04/22/2013 11:28</p><p>Finish time: 04/22/2013 12:58</p><p>Distance: 0.3 mi (01:30)</p><p>Moving time: 00:13</p><p>Average speed: 0.2 mph</p><p>Avg. Speed Mov.: 1.1 mph</p><p>Max. Speed: 1.7 mph</p><p>Minimum altitude: 23 m</p><p>Maximum altitude: 26 m</p><p>Elevation gain: 0 m</p><p>Elevation loss: 0 m</p><p>Rise time: 00:00</p><p>Fall time: 00:00</p><hr align="center" width="480" style="height: 2px; width: 517px"/>]]></desc>
+<type>Undefined</type>
+<trkseg>
+<trkpt lat="51.0635152" lon="-1.30972303">
+<ele>23.42</ele>
+<time>2013-04-22T10:28:16Z</time>
+</trkpt>
+<trkpt lat="51.06432195" lon="-1.30849438">
+<ele>24.29</ele>
+<time>2013-04-22T11:37:31Z</time>
+</trkpt>
+<trkpt lat="51.06439446" lon="-1.30888549">
+<ele>24.47</ele>
+<time>2013-04-22T11:38:52Z</time>
+</trkpt>
+<trkpt lat="51.06457195" lon="-1.30901779">
+<ele>24.61</ele>
+<time>2013-04-22T11:39:18Z</time>
+</trkpt>
+<trkpt lat="51.06467829" lon="-1.30926632">
+<ele>24.92</ele>
+<time>2013-04-22T11:39:53Z</time>
+</trkpt>
+<trkpt lat="51.06510777" lon="-1.30941736">
+<ele>25.58</ele>
+<time>2013-04-22T11:43:42Z</time>
+</trkpt>
+<trkpt lat="51.06456485" lon="-1.30875393">
+<ele>24.99</ele>
+<time>2013-04-22T11:46:46Z</time>
+</trkpt>
+<trkpt lat="51.06440655" lon="-1.30859454">
+<ele>25.70</ele>
+<time>2013-04-22T11:47:12Z</time>
+</trkpt>
+<trkpt lat="51.06426152" lon="-1.3087738">
+<ele>25.64</ele>
+<time>2013-04-22T11:49:57Z</time>
+</trkpt>
+<trkpt lat="51.06420103" lon="-1.30906691">
+<ele>26.35</ele>
+<time>2013-04-22T11:58:08Z</time>
+</trkpt>
+<trkpt lat="51.0641002" lon="-1.30931122">
+<ele>26.56</ele>
+<time>2013-04-22T11:58:36Z</time>
+</trkpt>
+</trkseg>
+</trk>
+</gpx>
