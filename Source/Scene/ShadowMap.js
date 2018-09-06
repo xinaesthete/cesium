@@ -48,7 +48,10 @@ define([
         './DebugCameraPrimitive',
         './PerInstanceColorAppearance',
         './Primitive',
-        './ShadowMapShader'
+        './ShadowMapShader',
+         //PJT
+        '../DataSources/Property',
+        '../DataSources/EntityView'
     ], function(
         BoundingRectangle,
         BoundingSphere,
@@ -99,7 +102,9 @@ define([
         DebugCameraPrimitive,
         PerInstanceColorAppearance,
         Primitive,
-        ShadowMapShader) {
+        ShadowMapShader,
+        Property,
+        EntityView) {
     'use strict';
 
     /**
@@ -310,6 +315,9 @@ define([
 
         this._size = defaultValue(options.size, 2048);
         this.size = this._size;
+
+        this._trackedEntity = undefined;
+        this._entityView = undefined;
     }
 
     /**
@@ -510,6 +518,45 @@ define([
             set : function(value) {
                 this.dirty = this._debugCascadeColors !== value;
                 this._debugCascadeColors = value;
+            }
+        },
+
+        /**
+         * PJT HACK:: lightCamera will track this entity.
+         *
+         * @memberof ShadowMap.prototype
+         * @type {Entity}
+         * @default undefined
+         */
+        trackedEntity : {
+            get : function() {
+                return this._trackedEntity;
+            },
+            set : function(value) {
+                //referring to Viewer.trackedEntity for first implementation
+                if (this._trackedEntity !== value) {
+                    this._trackedEntity = value;
+
+                    //Cancel any pending zoom
+                    //cancelZoom(this);
+
+                    //var scene = this.scene;
+
+                    //Stop tracking (NB: not thought through)
+                    if (!defined(value) || !defined(value.position)) {
+                        this._needTrackedEntityUpdate = false;
+
+                        this.camera.lookAtTransform(Matrix4.IDENTITY);
+                    } else {
+                        //We can't start tracking immediately, so we set a flag and start tracking
+                        //when the bounding sphere is ready (most likely next frame).
+                        this._needTrackedEntityUpdate = true;
+                    }
+                    ////TODO::: check, maybe add events etc...
+                    //this._trackedEntityChanged.raiseEvent(value);
+                    //this.scene.requestRender();
+
+                }
             }
         }
     });
@@ -1276,6 +1323,7 @@ define([
 
             // Shadows start to fade out once the light gets closer to the horizon.
             // At this point the globe uses vertex lighting alone to darken the surface.
+            //PJT XXX::: add options to control this?
             var darknessAmount = CesiumMath.clamp(dot / 0.1, 0.0, 1.0);
             shadowMap._darkness = CesiumMath.lerp(1.0, shadowMap.darkness, darknessAmount);
 
@@ -1308,6 +1356,7 @@ define([
     }
 
     function updateCameras(shadowMap, frameState) {
+        updateTrackedEntity(shadowMap, frameState);
         var camera = frameState.camera; // The actual camera in the scene
         var lightCamera = shadowMap._lightCamera; // The external camera representing the light source
         var sceneCamera = shadowMap._sceneCamera; // Clone of camera, with clamped near and far planes
@@ -1357,6 +1406,43 @@ define([
             shadowMap._needsUpdate = true;
         }
         shadowMap._outOfViewPrevious = shadowMap._outOfView;
+    }
+
+    function updateTrackedEntity(shadowMap, frameState) {
+        if (!shadowMap._needTrackedEntityUpdate) {
+            return;
+        }
+
+        var trackedEntity = shadowMap._trackedEntity;
+        //>>How should I get a clock reference here? This looks promising...
+        var currentTime = frameState.time; //viewer.clock.currentTime;
+
+        //(from comment in Viewer)
+        //Verify we have a current position at this time. This is only triggered if a position
+        //has become undefined after trackedEntity is set but before the boundingSphere has been
+        //computed. In this case, we will track the entity once it comes back into existence.
+        var currentPosition = Property.getValueOrUndefined(trackedEntity.position, currentTime);
+        //it'd be cool to also get velocity of point and e.g. change camera FOV in relation to it.
+        shadowMap._lightCamera.position = currentPosition;
+
+        if (!defined(currentPosition)) {
+            return;
+        }
+
+        // var scene = shadowMap.lightCamera.scene;// viewer.scene;
+        // //Is this necessary / how much of this is necessary?
+        // //What is this 'EntityView' and why is a new one constructed rather than just being updated?
+
+        // //It seems EntityView is rather hardcoded to act on scene.camera, which is not what we want
+        // //so either we want to somewhat radically alter the role of EntityView, or we want to do something
+        // //different...
+
+        // //(TODO: move contructor into property setter... maybe try that with Viewer.trackedEntity first)
+        // //var bs = state !== BoundingSphereState.FAILED ? boundingSphereScratch : undefined;
+        // shadowMap._entityView = new EntityView(trackedEntity, scene, scene.mapProjection.ellipsoid);
+        // shadowMap._entityView.update(currentTime);//, bs);
+
+        shadowMap._needTrackedEntityUpdate = false;
     }
 
     /**
